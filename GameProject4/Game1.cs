@@ -8,6 +8,7 @@ namespace GameProject4
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private Tilemap _tileMap;
 
         public Game1()
         {
@@ -19,14 +20,14 @@ namespace GameProject4
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            _tileMap = new Tilemap("map.txt");
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            _tileMap.LoadContent(Content);
             // TODO: use this.Content to load your game content here
         }
 
@@ -45,7 +46,9 @@ namespace GameProject4
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-
+            _spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(200, 0, 0));
+            _tileMap.Draw(gameTime, _spriteBatch);
+            _spriteBatch.End();
             base.Draw(gameTime);
         }
     }
