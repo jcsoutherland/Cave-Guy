@@ -17,6 +17,9 @@ namespace GameProject4
         int[] _map;
         string _filename;
 
+
+        //1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61
+
         public Tilemap(string filename)
         {
             _filename = filename;
@@ -34,8 +37,8 @@ namespace GameProject4
             _tileWidth = int.Parse(secondLine[0]);
             _tileHeight = int.Parse(secondLine[1]);
 
-            int tilesetColumns = _tilesetTexture.Width / _tileWidth;
-            int tilesetRows = _tilesetTexture.Height / _tileHeight;
+            int tilesetRows = _tilesetTexture.Width / _tileWidth;
+            int tilesetColumns = _tilesetTexture.Height / _tileHeight;
 
             _tiles = new Rectangle[tilesetColumns * tilesetRows];
 
@@ -44,25 +47,26 @@ namespace GameProject4
             {
                 for (int x = 0; x < tilesetRows; x++)
                 {
-                    int index = y * tilesetColumns + x;
+                    int index = y * tilesetRows + x;
                     _tiles[index] = new Rectangle(x * _tileWidth, y * _tileHeight, _tileWidth, _tileHeight);
                 }
             }
-
             var thirdLine = lines[2].Split(',');
             _mapWidth = int.Parse(thirdLine[0]);
             _mapHeight = int.Parse(thirdLine[1]);
 
             var fourthLine = lines[3].Split(',');
             _map = new int[_mapWidth * _mapHeight];
-            //MessageBox.Show(_map.Length.ToString());
             for (int i = 0; i < _mapWidth * _mapHeight; i++)
             {
-                /*if(i > 188)
+                if (fourthLine.Length - 1 < i)
                 {
-                    MessageBox.Show(i.ToString());
-                }*/
-                _map[i] = int.Parse(fourthLine[i]);
+                    _map[i] = int.Parse(fourthLine[1]) + 1;
+                }
+                else
+                {
+                    _map[i] = int.Parse(fourthLine[i]) + 1;
+                }
             }
         }
 
