@@ -128,7 +128,7 @@ namespace GameProject4
                     boosted = false;
                 }
             }
-            if (keyboardState.IsKeyDown(Keys.Space) && prevState.IsKeyUp(Keys.Space) && hasJumped == false && (!keyboardState.IsKeyDown(Keys.Down) || !keyboardState.IsKeyDown(Keys.S)))
+            if (keyboardState.IsKeyDown(Keys.Space) && prevState.IsKeyUp(Keys.Space) && hasJumped == false && !keyboardState.IsKeyDown(Keys.Down) && !keyboardState.IsKeyDown(Keys.S))
             {
                 _position.Y -= 8f;
                 _velocity.Y = -5f;
