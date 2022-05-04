@@ -46,9 +46,14 @@ namespace GameProject4
                 menu.play = false;
                 menu.Update(gameTime);
             }
-            if (menu.exit || game.exit)
+            if (menu.exit)
             {
                 Exit();
+            }
+            if (game.exit)
+            {
+                //go back to menu and restart
+                Initialize();
             }
         }
 

@@ -30,6 +30,20 @@ namespace GameProject4
                      a.Top > b.Bottom || a.Bottom < b.Top);
         }
 
+        public static bool Collides(BoundingRectangle a, BoundingRectangle b, string s)
+        {
+            if(s == "p")
+            {
+                return !(a.Right < b.Left || a.Left > b.Right ||
+                a.Bottom > b.Bottom || a.Bottom < b.Top);
+            }
+            if(s == "l")
+            {
+                return !(a.Right < b.Left + 5 || a.Left > b.Right - 5);
+            }
+            return false;
+        }
+
         public static bool Collides(BoundingRectangle r, BoundingCircle c)
         {
             float nearestX = MathHelper.Clamp(c.Center.X, r.Left, r.Right);

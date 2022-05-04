@@ -39,6 +39,11 @@ namespace GameProject4
             return CollisionHelper.Collides(this, other);
         }
 
+        public bool CollidesWith(BoundingRectangle other, string s)
+        {
+            return CollisionHelper.Collides(this, other, s);
+        }
+
         public bool CollidesWith(BoundingCircle other)
         {
             return CollisionHelper.Collides(this, other);

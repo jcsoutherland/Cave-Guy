@@ -23,7 +23,7 @@ namespace GameProject4
         /// <summary>
         /// true if button clicked, false otherwise.
         /// </summary>
-        public bool Clicked { get; private set; } = false;
+        public bool Clicked { get; set; } = false;
 
         /// <summary>
         /// Constructs a new exit button in the correct position
@@ -34,11 +34,11 @@ namespace GameProject4
             filename = fn;
             if (count > 0)
             {
-                position = new Vector2(graphics.Viewport.Width / 2 - 64, (graphics.Viewport.Height / 2 - 32) + (count * 64) + 10);
+                position = new Vector2(graphics.Viewport.Width / 2 - 64, (graphics.Viewport.Height / 2 - 82) + (count * 64) + 6);
             }
             else
             {
-                position = new Vector2(graphics.Viewport.Width / 2 - 64, graphics.Viewport.Height / 2 - 32);
+                position = new Vector2(graphics.Viewport.Width / 2 - 64, graphics.Viewport.Height / 2 - 82);
             }
         }
 
@@ -77,7 +77,7 @@ namespace GameProject4
         /// <param name="spriteBatch"></param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, Color);
+            spriteBatch.Draw(texture, position, Color * 0.8f);
         }
     }
 }
