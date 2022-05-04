@@ -128,7 +128,7 @@ namespace GameProject4
                     boosted = false;
                 }
             }
-            if (keyboardState.IsKeyDown(Keys.Space) && prevState.IsKeyUp(Keys.Space) && hasJumped == false && !keyboardState.IsKeyDown(Keys.Down))
+            if (keyboardState.IsKeyDown(Keys.Space) && prevState.IsKeyUp(Keys.Space) && hasJumped == false && (!keyboardState.IsKeyDown(Keys.Down) || !keyboardState.IsKeyDown(Keys.S)))
             {
                 _position.Y -= 8f;
                 _velocity.Y = -5f;
@@ -136,7 +136,7 @@ namespace GameProject4
                 onPlatform = false;
                 ladderState = "none";
             }
-            if (keyboardState.IsKeyDown(Keys.Up) && ladderState != "none")
+            if ((keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) && ladderState != "none")
             {
                 Debug.WriteLine(ladderState);
                 if (_position.Y + bounds.Height < ladder.bounds.Top)
@@ -153,7 +153,7 @@ namespace GameProject4
                     _position.Y -= 2f;
                 }
             }
-            if (keyboardState.IsKeyDown(Keys.Down))
+            if ((keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)))
             {
                 if(hasJumped == false && keyboardState.IsKeyDown(Keys.Space))
                 {
@@ -184,7 +184,7 @@ namespace GameProject4
             {
                 crouching = false;
             }
-            if (keyboardState.IsKeyDown(Keys.Left) && ladderState != "on")
+            if ((keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A)) && ladderState != "on")
             {
                 running = true;
                 direction = "l";
@@ -198,7 +198,7 @@ namespace GameProject4
                 }
                 _velocity.X = -((200 / slowVector) * t);
             }
-            else if (keyboardState.IsKeyDown(Keys.Right) && ladderState != "on")
+            else if ((keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D)) && ladderState != "on")
             {
                 running = true;
                 direction = "r";
@@ -228,7 +228,7 @@ namespace GameProject4
                 }
                 else
                 {
-                    if (hasJumped == true && keyboardState.IsKeyDown(Keys.Down))
+                    if (hasJumped == true && (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)))
                     {
                         i = 2;
                     }
@@ -246,7 +246,7 @@ namespace GameProject4
                 hasJumped = false;
                 _position.Y = defaultPos.Y - bounds.Height;
             }
-            if (keyboardState.IsKeyDown(Keys.LeftControl) && prevState.IsKeyUp(Keys.LeftControl) && !attacking && ladderState != "on")
+            if (((keyboardState.IsKeyDown(Keys.LeftControl) && prevState.IsKeyUp(Keys.LeftControl)) || (keyboardState.IsKeyDown(Keys.RightControl) && prevState.IsKeyUp(Keys.RightControl))) && !attacking && ladderState != "on")
             {
                 if (lastAttack + attackReset < gameTime.TotalGameTime)
                 {
