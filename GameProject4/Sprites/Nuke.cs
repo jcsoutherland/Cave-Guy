@@ -134,6 +134,7 @@ namespace GameProject4
                     if (first)
                     {
                         first = false;
+                        _ba.lastFireAttack = gameTime.ElapsedGameTime;
                     }
                 }
 

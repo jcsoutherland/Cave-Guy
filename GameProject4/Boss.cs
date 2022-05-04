@@ -31,7 +31,7 @@ namespace GameProject4
         private Song gameMusic3;
         GraphicsDeviceManager _graphics;
         Rectangle source;
-        public int health = 10;//50;
+        public int health = 50;
         public BoundingRectangle bounds;
         Rectangle healthBar;
         Rectangle healthBarBg;
@@ -44,7 +44,7 @@ namespace GameProject4
         Rectangle boundsText;
         Texture2D bt;
         int attackFrame = 0;
-        public Stopwatch timer;
+        //public Stopwatch timer;
         Player _player;
 
         public Boss(Vector2 p, Player player, GraphicsDeviceManager g)
@@ -52,13 +52,11 @@ namespace GameProject4
             position = p;
             _graphics = g;
             _player = player;
-            bounds = new BoundingRectangle(position, 125, 175);
-            boundsText = new Rectangle((int)position.X, (int)position.Y, 125, 175);
+            bounds = new BoundingRectangle(new Vector2(position.X - 10, position.Y - 10), 135, 185);
+            boundsText = new Rectangle((int)position.X, (int)position.Y, 135, 185);
             healthBar = new Rectangle(270, 120, 300, 10);
             healthBarBg = new Rectangle(267, 117, 300 + 6, 16);
             bossAttack = new BossAttack(player, _graphics, this);
-            timer = new Stopwatch();
-            timer.Start();
         }
         public void LoadContent(ContentManager content, GraphicsDeviceManager g, SpriteFont sf)
         {
@@ -88,7 +86,7 @@ namespace GameProject4
                 state = "Killed";
                 attackState = "None";
                 bossAttack.type = attackState;
-                timer.Stop();
+                //timer.Stop();
                 finishTime = gameTime.TotalGameTime;
                 MediaPlayer.Play(gameMusic3);
             }

@@ -53,6 +53,8 @@ namespace GameProject4
         int minutes = 0;
         //double timerDelay = 1;
         double timeCheck = 0;
+        bool timerStarted;
+        Stopwatch timer;
         //to do:
         //add more sound fx
 
@@ -87,6 +89,7 @@ namespace GameProject4
             fadeRec = new Rectangle(0, 0, _graphics.GraphicsDevice.Viewport.Width, _graphics.GraphicsDevice.Viewport.Height);
             player = new Player(_graphics, new Vector2(250, _graphics.GraphicsDevice.Viewport.Height - 144), this);
             boss = new Boss(new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2 - 44, _graphics.GraphicsDevice.Viewport.Height / 2 - 48), player, g);
+            timer = new Stopwatch();
         }
 
         /// <summary>
@@ -218,12 +221,12 @@ namespace GameProject4
         public void Draw(GameTime gameTime)
         {
             _graphics.GraphicsDevice.Clear(Color.MediumPurple);
-            if(1 + timeCheck < boss.timer.Elapsed.TotalSeconds)
+            if(1 + timeCheck < timer.Elapsed.TotalSeconds)
             {
-                timeCheck = boss.timer.Elapsed.TotalSeconds;
+                timeCheck = timer.Elapsed.TotalSeconds;
                 seconds++;
             }
-            Debug.WriteLine(((int)boss.timer.Elapsed.Seconds).ToString("00"));
+            //Debug.WriteLine(((int)timer.Elapsed.Seconds).ToString("00"));
             if (seconds > 59) { seconds = 0; minutes++; }
             if (minutes > 59) { minutes = 0; hours++; }
             string time = $"{hours.ToString("00")}:{minutes.ToString("00")}:{seconds.ToString("00")}";
@@ -267,6 +270,7 @@ namespace GameProject4
             }
             if (boss.KC > 0 && !nextLevel)
             {
+                timer.Stop();
                 door.opened = true;
                 _spriteBatch.DrawString(spriteFont, "Door Unlocked!", new Vector2((_graphics.GraphicsDevice.Viewport.Width / 2) - 170, (_graphics.GraphicsDevice.Viewport.Height / 2) - 96), Color.White);
                 _spriteBatch.DrawString(spriteFont, "Press E on the door to leave", new Vector2((_graphics.GraphicsDevice.Viewport.Width / 2) - 98, (_graphics.GraphicsDevice.Viewport.Height / 2) - 32), Color.White, 0, new Vector2(0, 0), .333f, SpriteEffects.None, 0);
@@ -276,6 +280,11 @@ namespace GameProject4
             {
                 alpha -= .01f;
                 _spriteBatch.Draw(fadeToBlack, fadeRec, Color.Black * alpha);
+            }
+            else if(alpha <= .2f && !timerStarted)
+            {
+                timerStarted = true;
+                timer.Start();
             }
             if (player.numLives == 0 || nextLevel)
             {

@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
-using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace GameProject4
 {
@@ -22,6 +21,7 @@ namespace GameProject4
 
         private Button exitBtn;
         private Button playBtn;
+        private Button controlsBtn;
         private SpriteFont spriteFont;
         private Texture2D background;
         private Texture2D fadeToBlack;
@@ -38,6 +38,7 @@ namespace GameProject4
         public bool animation;
         public bool exit;
         public bool play;
+        public bool controlsOpen;
 
         /// <summary>
         /// Constructor for the menu screen
@@ -49,6 +50,7 @@ namespace GameProject4
             xTranslate = 0;
             playBtn = new Button(_graphics.GraphicsDevice, 0, "PlayBtn");
             exitBtn = new Button(_graphics.GraphicsDevice, 1, "ExitButton");
+            controlsBtn = new Button(_graphics.GraphicsDevice, 2, "None");
             player = new Player(_graphics, new Vector2(250, _graphics.GraphicsDevice.Viewport.Height - 144), null);
             fadeRec = new Rectangle(0,0, _graphics.GraphicsDevice.Viewport.Width, _graphics.GraphicsDevice.Viewport.Height);
         }
@@ -62,9 +64,10 @@ namespace GameProject4
             _spriteBatch = new SpriteBatch(_graphics.GraphicsDevice);
             fadeToBlack = new Texture2D(_graphics.GraphicsDevice, 1, 1);
             fadeToBlack.SetData(new Color[] { Color.Black });
-            playBtn.LoadContent(Content);
-            exitBtn.LoadContent(Content);
             spriteFont = Content.Load<SpriteFont>("arial");
+            playBtn.LoadContent(Content, spriteFont);
+            exitBtn.LoadContent(Content, spriteFont);
+            controlsBtn.LoadContent(Content, spriteFont);
             background = Content.Load<Texture2D>("GamePlayBg");
             //player = Content.Load<Texture2D>("adventurer");
             player.LoadContent(Content);
@@ -80,8 +83,12 @@ namespace GameProject4
         /// <param name="gameTime"></param>
         public void Update(GameTime gameTime)
         {
-            playBtn.Update(gameTime);
-            exitBtn.Update(gameTime);
+            if (!controlsOpen)
+            {
+                playBtn.Update(gameTime);
+                exitBtn.Update(gameTime);
+            }
+            controlsBtn.Update(gameTime);
             if (exitBtn.Clicked)
             {
                 exit = true;
@@ -91,6 +98,18 @@ namespace GameProject4
                 //Console.WriteLine("Hi");
                 animation = true;
                 playBtn.Clicked = false;
+            }
+            if (controlsBtn.Clicked)
+            {
+                if (!controlsOpen)
+                {
+                    controlsOpen = true;
+                }
+                else
+                {
+                    controlsOpen = false;
+                }
+                controlsBtn.Clicked = false;
             }
             if (animation)
             {
@@ -112,24 +131,35 @@ namespace GameProject4
         /// <param name="gameTime"></param>
         public void Draw(GameTime gameTime)
         {
-            _graphics.GraphicsDevice.Clear(Color.MediumPurple);
+            _graphics.GraphicsDevice.Clear(Color.Black);
 
-            transform = Matrix.CreateTranslation(xTranslate, 0, 0);
-            _spriteBatch.Begin(transformMatrix: transform);
-            _spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
-            _spriteBatch.Draw(title, new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2 - 170, 80), Color.LightGray);
-            playBtn.Draw(gameTime, _spriteBatch);
-            exitBtn.Draw(gameTime, _spriteBatch);
-            _spriteBatch.End();
-
-            _spriteBatch.Begin();
-            player.Draw(gameTime, _spriteBatch);
-            if (animation && alpha < 1)
+            if (controlsOpen)
             {
-                alpha += .006f;
-                _spriteBatch.Draw(fadeToBlack, fadeRec, Color.Black * alpha);
+                _spriteBatch.Begin();
+                controlsBtn.Draw(gameTime, _spriteBatch);
+                _spriteBatch.DrawString(spriteFont, "Controls:\n - Movement: [Arrow keys] or [WASD]\n - Jump: [Space]\n - Attack: [Ctrl]\n - Interact: [E]\n - Ladder Movement: [Up/Down] or [W/S]\n - Drop Down: [Down + Space] or [S + Space]\n - Exit Game: [ESC]\n\n Note: you can't go down ladders from above", new Vector2(30, 30), Color.LightGray, 0, new Vector2(0, 0), .5f, SpriteEffects.None, 0);
+                _spriteBatch.End();
             }
-            _spriteBatch.End();
+            else
+            {
+                transform = Matrix.CreateTranslation(xTranslate, 0, 0);
+                _spriteBatch.Begin(transformMatrix: transform);
+                _spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
+                _spriteBatch.Draw(title, new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2 - 170, 80), Color.LightGray);
+                playBtn.Draw(gameTime, _spriteBatch);
+                exitBtn.Draw(gameTime, _spriteBatch);
+                controlsBtn.Draw(gameTime, _spriteBatch);
+                _spriteBatch.End();
+
+                _spriteBatch.Begin();
+                player.Draw(gameTime, _spriteBatch);
+                if (animation && alpha < 1)
+                {
+                    alpha += .006f;
+                    _spriteBatch.Draw(fadeToBlack, fadeRec, Color.Black * alpha);
+                }
+                _spriteBatch.End();
+            }      
         }
     }
 }

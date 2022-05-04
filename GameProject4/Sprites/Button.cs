@@ -13,7 +13,11 @@ namespace GameProject4
         private Texture2D texture;
         private Vector2 position;
         private string filename;
+        private Rectangle btnRec;
+        private GraphicsDevice g;
+        private SpriteFont font;
 
+        private MouseState prev;
         private MouseState currentMouseState;
 
         /// <summary>
@@ -31,14 +35,23 @@ namespace GameProject4
         /// <param name="graphics"></param>
         public Button(GraphicsDevice graphics, int count, string fn)
         {
+            g = graphics;
             filename = fn;
-            if (count > 0)
+            if (filename == "None")
             {
-                position = new Vector2(graphics.Viewport.Width / 2 - 64, (graphics.Viewport.Height / 2 - 82) + (count * 64) + 6);
+                position = new Vector2(graphics.Viewport.Width - 105, graphics.Viewport.Height - 45);
+                btnRec = new Rectangle((int)position.X, (int)position.Y, 90, 30);
             }
             else
             {
-                position = new Vector2(graphics.Viewport.Width / 2 - 64, graphics.Viewport.Height / 2 - 82);
+                if (count > 0)
+                {
+                    position = new Vector2(graphics.Viewport.Width / 2 - 64, (graphics.Viewport.Height / 2 - 82) + (count * 64) + 6);
+                }
+                else
+                {
+                    position = new Vector2(graphics.Viewport.Width / 2 - 64, graphics.Viewport.Height / 2 - 82);
+                }
             }
         }
 
@@ -46,9 +59,18 @@ namespace GameProject4
         /// Loads sprite for exit button
         /// </summary>
         /// <param name="content"></param>
-        public void LoadContent(ContentManager content)
+        public void LoadContent(ContentManager content, SpriteFont f)
         {
-            texture = content.Load<Texture2D>(filename);
+            font = f;
+            if(filename != "None")
+            {
+                texture = content.Load<Texture2D>(filename);
+            }
+            else
+            {
+                texture = new Texture2D(g, 1, 1);
+                texture.SetData(new Color[] { Color.White });
+            }
         }
 
         /// <summary>
@@ -60,14 +82,28 @@ namespace GameProject4
             Color = Color.White;
             currentMouseState = Mouse.GetState();
 
-            if (currentMouseState.Position.X < (int)position.X + 128 && currentMouseState.Position.X > (int)position.X && currentMouseState.Position.Y > (int)position.Y && currentMouseState.Position.Y < (int)position.Y + 64)
-            {
-                Color = Color.DarkGray;
-                if (currentMouseState.LeftButton == ButtonState.Pressed)
+            if(filename != "None"){
+                if (currentMouseState.Position.X < (int)position.X + 128 && currentMouseState.Position.X > (int)position.X && currentMouseState.Position.Y > (int)position.Y && currentMouseState.Position.Y < (int)position.Y + 64)
                 {
-                    Clicked = true;
+                    Color = Color.DarkGray;
+                    if (currentMouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        Clicked = true;
+                    }
                 }
             }
+            else
+            {
+                if (currentMouseState.Position.X < (int)position.X + 90 && currentMouseState.Position.X > (int)position.X && currentMouseState.Position.Y > (int)position.Y && currentMouseState.Position.Y < (int)position.Y + 30)
+                {
+                    Color = Color.DarkGray;
+                    if (currentMouseState.LeftButton == ButtonState.Pressed && prev.LeftButton != ButtonState.Pressed)
+                    {
+                        Clicked = true;
+                    }
+                }
+            }
+            prev = currentMouseState;
         }
 
         /// <summary>
@@ -77,7 +113,15 @@ namespace GameProject4
         /// <param name="spriteBatch"></param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, Color * 0.8f);
+            if(filename != "None")
+            {
+                spriteBatch.Draw(texture, position, Color * 0.8f);
+            }
+            else
+            {
+                spriteBatch.Draw(texture, btnRec, Color * 0.45f);
+                spriteBatch.DrawString(font, "CONTROLS", new Vector2(btnRec.X + 3, btnRec.Y + 7), Color.Black, 0, new Vector2(0,0), .23f, SpriteEffects.None, 0);
+            }
         }
     }
 }

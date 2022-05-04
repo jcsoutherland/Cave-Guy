@@ -28,10 +28,10 @@ namespace GameProject4
         public bool windState = false;
         public bool windBreath = false;
         private TimeSpan attackWindReset = TimeSpan.FromSeconds(12);
-        private TimeSpan lastWindAttack;
+        public TimeSpan lastWindAttack;
         private TimeSpan windTimer = TimeSpan.FromSeconds(3);
         private TimeSpan attackFireReset = TimeSpan.FromSeconds(6);
-        private TimeSpan lastFireAttack;
+        public TimeSpan lastFireAttack;
         private GameTime g;
         private float alpha = 1f;
         private int count = 0;
@@ -168,58 +168,61 @@ namespace GameProject4
 
         public void Update(GameTime gameTime)
         {
-            foreach (WindProjectile w in windProjectiles) w.Update(gameTime);
-            if (!fireState)
+            if (!nextPhase)
             {
-                if (lastFireAttack + attackFireReset < gameTime.TotalGameTime)
+                foreach (WindProjectile w in windProjectiles) w.Update(gameTime);
+                if (!fireState && !nuke.first)
                 {
-                    fireState = true;
-                }
-            }
-            if (!windState)
-            {
-                if(lastWindAttack + attackWindReset < gameTime.TotalGameTime)
-                {
-                    windState = true;
-                }
-            }
-            if (!nuke.active)
-            {
-                if(lastNukeAttack + attackNukeReset < gameTime.TotalGameTime)
-                {
-                    nuke.active = true;
-                    float randX = (float)rand.Next(120, 687);
-                    nuke.position = new Vector2(randX, 240);
-                    
-                }
-            }
-            if((type == "FirePillar" || type == "FWN" || type == "Nuke") && fireState && (fireAnimationFrame == 4 || fireAnimationFrame == 5) && !player.inv)
-            {
-                if(offset == 0)
-                {
-                    for(int i = 0; i < 6; i++)
+                    if (lastFireAttack + attackFireReset < gameTime.TotalGameTime)
                     {
-                        if (player.bounds.CollidesWith(hitboxes[i]) && !nuke.safe && player.numLives > 0 && boss.state == "Attacking")
-                        {
-                            player.numLives--;
-                            loseLife.Play();
-                            player.lives[player.numLives].dead = true;
-                            player.inv = true;
-                            player.lastInv = gameTime.TotalGameTime;
-                        }
+                        fireState = true;
                     }
                 }
-                else
+                if (!windState)
                 {
-                    for (int i = 6; i < 12; i++)
+                    if (lastWindAttack + attackWindReset < gameTime.TotalGameTime)
                     {
-                        if (player.bounds.CollidesWith(hitboxes[i]) && !nuke.safe && player.numLives > 0 && boss.state == "Attacking")
+                        windState = true;
+                    }
+                }
+                if (!nuke.active)
+                {
+                    if (lastNukeAttack + attackNukeReset < gameTime.TotalGameTime)
+                    {
+                        nuke.active = true;
+                        float randX = (float)rand.Next(120, 687);
+                        nuke.position = new Vector2(randX, 240);
+
+                    }
+                }
+                if ((type == "FirePillar" || type == "FWN" || type == "Nuke") && fireState && (fireAnimationFrame == 4 || fireAnimationFrame == 5) && !player.inv && !nuke.first)
+                {
+                    if (offset == 0)
+                    {
+                        for (int i = 0; i < 6; i++)
                         {
-                            player.numLives--;
-                            loseLife.Play();
-                            player.lives[player.numLives].dead = true;
-                            player.inv = true;
-                            player.lastInv = gameTime.TotalGameTime;
+                            if (player.bounds.CollidesWith(hitboxes[i]) && !nuke.safe && player.numLives > 0 && boss.state == "Attacking")
+                            {
+                                player.numLives--;
+                                loseLife.Play();
+                                player.lives[player.numLives].dead = true;
+                                player.inv = true;
+                                player.lastInv = gameTime.TotalGameTime;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 6; i < 12; i++)
+                        {
+                            if (player.bounds.CollidesWith(hitboxes[i]) && !nuke.safe && player.numLives > 0 && boss.state == "Attacking")
+                            {
+                                player.numLives--;
+                                loseLife.Play();
+                                player.lives[player.numLives].dead = true;
+                                player.inv = true;
+                                player.lastInv = gameTime.TotalGameTime;
+                            }
                         }
                     }
                 }
@@ -256,6 +259,7 @@ namespace GameProject4
                         case "Nuke":
                             if (nextPhase)
                             {
+                                lastFireAttack = gameTime.ElapsedGameTime;
                                 fireAnimationFrame = 0;
                                 count = 0;
                                 animationTime = 0.5f;
@@ -279,6 +283,7 @@ namespace GameProject4
                         case "FWN":
                             if (nextPhase)
                             {
+                                lastWindAttack = gameTime.TotalGameTime;
                                 fireAnimationFrame = 0;
                                 count = 0;
                                 animationTime = 0.5f;
@@ -299,7 +304,7 @@ namespace GameProject4
                                     FireColumn();
                                 }
                             }
-                            attackWindReset = TimeSpan.FromSeconds(12);
+                            attackWindReset = TimeSpan.FromSeconds(10);
                             if (windState)
                             {
                                 if (lastWindAttack + windTimer < gameTime.TotalGameTime)
