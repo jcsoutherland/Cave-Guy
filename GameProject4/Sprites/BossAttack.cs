@@ -51,11 +51,13 @@ namespace GameProject4
         public Player player;
         WindProjectile[] windProjectiles;
         Random rand;
+        public Boss boss;
 
-        public BossAttack(Player p, GraphicsDeviceManager _graphics)
+        public BossAttack(Player p, GraphicsDeviceManager _graphics, Boss b)
         {
             graphics = _graphics;
             player = p;
+            boss = b;
             hitboxes = new List<BoundingRectangle>();
             drawHitBoxes = new List<Rectangle>();
             windProjectiles = new WindProjectile[] { 
@@ -197,7 +199,7 @@ namespace GameProject4
                 {
                     for(int i = 0; i < 6; i++)
                     {
-                        if (player.bounds.CollidesWith(hitboxes[i]) && !nuke.safe && player.numLives > 0)
+                        if (player.bounds.CollidesWith(hitboxes[i]) && !nuke.safe && player.numLives > 0 && boss.state == "Attacking")
                         {
                             player.numLives--;
                             loseLife.Play();
@@ -211,7 +213,7 @@ namespace GameProject4
                 {
                     for (int i = 6; i < 12; i++)
                     {
-                        if (player.bounds.CollidesWith(hitboxes[i]) && !nuke.safe && player.numLives > 0)
+                        if (player.bounds.CollidesWith(hitboxes[i]) && !nuke.safe && player.numLives > 0 && boss.state == "Attacking")
                         {
                             player.numLives--;
                             loseLife.Play();
@@ -283,6 +285,7 @@ namespace GameProject4
                                 alpha = 0.5f;
                                 nextPhase = false;
                                 nuke.first = true;
+                                nuke.active = true;
                             }
                             if (nuke.active)
                             {

@@ -31,7 +31,7 @@ namespace GameProject4
         private Song gameMusic3;
         GraphicsDeviceManager _graphics;
         Rectangle source;
-        public int health = 50;
+        public int health = 10;//50;
         public BoundingRectangle bounds;
         Rectangle healthBar;
         Rectangle healthBarBg;
@@ -56,7 +56,7 @@ namespace GameProject4
             boundsText = new Rectangle((int)position.X, (int)position.Y, 125, 175);
             healthBar = new Rectangle(270, 120, 300, 10);
             healthBarBg = new Rectangle(267, 117, 300 + 6, 16);
-            bossAttack = new BossAttack(player, _graphics);
+            bossAttack = new BossAttack(player, _graphics, this);
             timer = new Stopwatch();
             timer.Start();
         }
@@ -78,7 +78,7 @@ namespace GameProject4
         }
 
         public void Update(GameTime gameTime)
-        {
+        {           
             boundsText.Height = (int)bounds.Height;
             healthBar.Width = 6*health;
             bossAttack.Update(gameTime);

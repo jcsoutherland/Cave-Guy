@@ -17,7 +17,7 @@ namespace GameProject4
         Rectangle nuke;
         Texture2D safeTexture;
         Texture2D outlineSafe;
-        BoundingCircle hitbox;
+        public BoundingCircle hitbox;
         float radius = 90f;
         GraphicsDeviceManager _graphics;
         public float alpha = -1f;
@@ -36,7 +36,6 @@ namespace GameProject4
             position = pos;
             _ba = ba;
             player = p;
-            hitbox = new BoundingCircle(new Vector2(position.X + radius + 3, position.Y + radius + 3), radius + 3);
             nuke = new Rectangle(0, 0, 800, 480);
         }
 
@@ -86,7 +85,8 @@ namespace GameProject4
         {
             if (active)
             {
-                hitbox.Center = new Vector2(position.X + radius + 3, position.Y + radius + 3);
+                hitbox = new BoundingCircle(new Vector2(position.X + radius + 3, position.Y + radius + 3), radius + 3);
+                //hitbox.Center = new Vector2(position.X + radius + 3, position.Y + radius + 3);
                 if (player.bounds.CollidesWith(hitbox))
                 {
                     //Debug.WriteLine("Safe");
@@ -112,7 +112,7 @@ namespace GameProject4
                 if (alpha >= .85f)
                 {
                     //delete player.inv condition later
-                    if (!safe && player.numLives > 0)
+                    if (!safe && player.numLives > 0 && _ba.boss.state == "Attacking")
                     {
                         player.numLives--;
                         _ba.loseLife.Play();
@@ -140,6 +140,7 @@ namespace GameProject4
             }
             else
             {
+                hitbox.Center = new Vector2(-100, -100);
                 if (inv)
                 {
                     if(lastInv + invReset < gameTime.TotalGameTime)

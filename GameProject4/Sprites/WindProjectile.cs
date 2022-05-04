@@ -53,7 +53,7 @@ namespace GameProject4
         {
             if (!hit && player.numLives > 0)
             {
-                if (hitbox.CollidesWith(player.bounds) && !player.inv && !_ba.nuke.safe)
+                if (hitbox.CollidesWith(player.bounds) && !player.inv && !_ba.nuke.safe && _ba.boss.state == "Attacking")
                 {
                     hit = true;
                     player.numLives--;
@@ -62,7 +62,7 @@ namespace GameProject4
                     player.inv = true;
                     player.lastInv = gameTime.TotalGameTime;
                 }
-                else if (position.X < -33 || position.X > 801)
+                else if (position.X < -33 || position.X > 801 || hitbox.CollidesWith(_ba.nuke.hitbox))
                 {
                     hit = true;
                 }
