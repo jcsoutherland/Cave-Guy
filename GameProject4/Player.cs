@@ -168,7 +168,7 @@ namespace GameProject4
                 }
                 if(ladderState == "on" && _position.Y + bounds.Height < ladder.bounds.Bottom)
                 {
-                    Debug.WriteLine("moving");
+                    //Debug.WriteLine("moving");
                     _position.X = ladder.bounds.Left;
                     ladderState = "on";
                     _velocity.Y = 0f;
@@ -435,6 +435,7 @@ namespace GameProject4
                     spriteBatch.Draw(texture, _position, source, Color.White * alpha, 0, new Vector2(8, 6), 1.25f, SpriteEffects.None, 0);
                 }
             }
+            //spriteBatch.Draw(bt, boundsText, Color.Red * 0.5f);
         }
     }
 }

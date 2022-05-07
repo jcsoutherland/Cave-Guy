@@ -103,28 +103,8 @@ namespace GameProject4
             AnimationFrame++;
         }
 
-        /*public void WindCurrent()
-        {
-            if (windAnimationFrame > 10)
-            {
-                windAnimationFrame = 0;
-                ready = true;
-            }
-            else
-            {
-                ready = false;
-            }
-            sourceWind = new Rectangle((windAnimationFrame * 48), 0, 48, 32);
-            windAnimationFrame++;
-        }*/
-
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            /*if (!ready && hit)
-            {
-                WindCurrent();
-                //spriteBatch.Draw(texture, );
-            }*/
             if(!hit)
             {
                 if(alpha < 1f)
