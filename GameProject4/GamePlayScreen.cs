@@ -158,10 +158,14 @@ namespace GameProject4
                 {
                     if(player.ladderState != "on")
                     {
-                        if (player.bounds.CollidesWith(l.bounds, "l"))
+                        if (player.bounds.CollidesWith(l.bounds, "l") && player.ladderState == "none" && !player.hasJumped)
                         {
                             player.ladder = l;
                             player.ladderState = "near";
+                        }
+                        else if(player.ladderState == "none")
+                        {
+                            player.ladder = null;
                         }
                     }
 

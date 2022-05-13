@@ -243,7 +243,7 @@ namespace GameProject4
                 {
                     spriteBatch.Draw(bt, healthBarBg, Color.Gray);
                     spriteBatch.Draw(bt, healthBar, Color.Red * 0.4f);
-                    spriteBatch.DrawString(spriteFont, "Stoned Steven", new Vector2(healthBarBg.X + 70, healthBarBg.Y - 30), Color.White, 0, new Vector2(0, 0), .4f, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(spriteFont, "Stone Steven", new Vector2(healthBarBg.X + 75, healthBarBg.Y - 30), Color.White, 0, new Vector2(0, 0), .4f, SpriteEffects.None, 0);
                 }
                 //spriteBatch.Draw(attackTexture, position, source, Color.LightGray, 0, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
                 //spriteBatch.Draw(bt, boundsText, Color.Red * 0.5f);

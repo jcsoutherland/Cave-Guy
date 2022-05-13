@@ -40,7 +40,7 @@ namespace GameProject4
         public Vector2 _position;
         public Vector2 _velocity;
         float slowVector = 1;
-        bool hasJumped;
+        public bool hasJumped;
         public PlatformBox ladder;
         public bool boosted;
         float i = 1;
@@ -130,20 +130,23 @@ namespace GameProject4
             }
             if (keyboardState.IsKeyDown(Keys.Space) && prevState.IsKeyUp(Keys.Space) && hasJumped == false && !keyboardState.IsKeyDown(Keys.Down) && !keyboardState.IsKeyDown(Keys.S))
             {
+                Debug.WriteLine("Jumped");
                 _position.Y -= 8f;
                 _velocity.Y = -5f;
                 hasJumped = true;
                 onPlatform = false;
+                ladder = null;
                 ladderState = "none";
             }
-            if ((keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) && ladderState != "none")
+            if ((keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) && ladderState != "none" && ladder != null)
             {
-                Debug.WriteLine(ladderState);
+                //Debug.WriteLine(ladderState);
                 if (_position.Y + bounds.Height < ladder.bounds.Top)
                 {
                     ladderState = "none";
+                    ladder = null;
                 }
-                else
+                else if (ladder != null && (onPlatform || ladderState == "on" || bounds.Y > _graphics.GraphicsDevice.Viewport.Height - 30))
                 {
                     Debug.WriteLine("moving");
                     _position.X = ladder.bounds.Left;
@@ -155,7 +158,7 @@ namespace GameProject4
             }
             if ((keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)))
             {
-                if(hasJumped == false && keyboardState.IsKeyDown(Keys.Space))
+                if(hasJumped == false && keyboardState.IsKeyDown(Keys.Space) && ladderState != "on")
                 {
                     _position.Y += 20f;
                     _velocity.Y = -2f;
@@ -166,9 +169,17 @@ namespace GameProject4
                 {
                     crouching = true;
                 }
-                if(ladderState == "on" && _position.Y + bounds.Height < ladder.bounds.Bottom)
+                if (ladderState == "near" && ladder != null && onPlatform && _position.Y + bounds.Height < ladder.bounds.Bottom)
                 {
-                    //Debug.WriteLine("moving");
+                    Debug.WriteLine("here");
+                    _position.X = ladder.bounds.Left;
+                    ladderState = "on";
+                    _velocity.Y = 0f;
+                    hasJumped = false;
+                    _position.Y += 2f;
+                }
+                if (ladder != null && ladderState == "on" && _position.Y + bounds.Height < ladder.bounds.Bottom)
+                {
                     _position.X = ladder.bounds.Left;
                     ladderState = "on";
                     _velocity.Y = 0f;
@@ -177,7 +188,9 @@ namespace GameProject4
                 }
                 else
                 {
+                    Debug.WriteLine("pp");
                     ladderState = "none";
+                    ladder = null;
                 }
             }
             else
@@ -289,6 +302,9 @@ namespace GameProject4
             boundsText.Y = (int)bounds.Y;
         }
 
+        /// <summary>
+        /// controls the run animation loop
+        /// </summary>
         public void RunAnimation()
         {
             if (crouching)
@@ -315,6 +331,9 @@ namespace GameProject4
             source = new Rectangle(temp.X + 11, temp.Y + 6, 32, 32);
         }
 
+        /// <summary>
+        /// Controls the attack animation loop
+        /// </summary>
         public void AttackAnimation()
         {
             Debug.WriteLine(attackState);
